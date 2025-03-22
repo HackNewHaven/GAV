@@ -6,37 +6,12 @@ use tokio;
 
 use gavlib::utils::rand_utils::random_string_of_len;
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn Error>> {
-
-   // Load the MongoDB connection string from an environment variable:
-
-   let client_uri =
-
-      env::var("MONGODB_URI").expect("You must set the MONGODB_URI environment var!");
-
-   // A Client is needed to connect to MongoDB:
-
-   // An extra line of code to work around a DNS issue on Windows:
-
-   let options =
-
-      ClientOptions::parse_with_resolver_config(&client_uri, ResolverConfig::cloudflare())
-
-         .await?;
-
-   let client = Client::with_options(options)?;
-
-   // Print the databases in our MongoDB cluster:
-
-   println!("Databases:");
-
-   for name in client.list_database_names(None, None).await? {
-
-      println!("- {}", name);
-
-   }
-
-   Ok(())
+pub async fn connect_to_db() -> Result<Client, Box<dyn Error>> {
+    let db_url = env::var("DB_URL").expect("DB_URL must be set");
+    let mut client_options = ClientOptions::parse_with_resolver_config(&db_url, ResolverConfig::cloudflare()).await?;
+    client_options.app_name = Some("PasswordManager".to_string());
+    let client = Client::with_options(client_options)?;
+    Ok(client)
 
 }
 // Generates a random password
