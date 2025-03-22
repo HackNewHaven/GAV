@@ -18,5 +18,5 @@ pub fn store_password(){
 
 // Retrive password
 pub fn retrieve_password(){
-
+let passwords = client.databvase("user_passwords").collection("passwords");
 }
