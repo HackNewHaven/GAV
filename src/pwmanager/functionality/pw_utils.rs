@@ -29,7 +29,7 @@ pub fn generate_secure() -> String {
 pub fn store_password(){
     //Sample insert w/o implementation on UI as we will do that later.
     
-    let added_accounts = vec [
+    let added_accounts = vec! [
         user_db{username: "test1".to_string(), password: "test1".to_string(), website: "test1.com".to_string()}
     ];
 
