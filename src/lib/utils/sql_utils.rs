@@ -41,19 +41,18 @@ pub fn store_password(&mut self) -> DbResult<()> {
     )?)
 }
 
-// Retrive password
-pub fn retrieve_password(){
-    //Sample select w/o implementation on UI as we will do that later.
-    let selected_accounts = conn.query_map(
-        "SELECT username, password, website FROM user_db",
-        |(username, password, website)| {
-            UserDb {
-                username,
-                password,
-                website
-            }
-        },
-    )?;
-    assert_eq!(added_accounts, selected_accounts);
-}
+    // Retrive password
+    pub fn retrieve_userdb_vec(&mut self) -> DbResult<Vec<UserDb>> {
+        //Sample select w/o implementation on UI as we will do that later.
+        Ok(self.conn.query_map(
+            "SELECT username, password, website FROM user_db",
+            |(username, password, website)| {
+                UserDb {
+                    username,
+                    password,
+                    website
+                }
+            },
+        )?)
+    }
 }
