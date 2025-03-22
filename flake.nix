@@ -19,7 +19,6 @@
           cmp-buffer
           cmp-path
           cmp_luasnip
-          #cmp-crates
           crates-nvim
           luasnip
           friendly-snippets
@@ -196,6 +195,12 @@ EOF
             pkgs.clippy
             pkgs.mysql84
           ];
+
+          LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath (with pkgs; [
+            wayland
+            libGL
+            libxkbcommon
+          ]);
         };
       });
 }
