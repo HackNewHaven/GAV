@@ -1,22 +1,18 @@
-use rand::prelude::*;
-use mongodb::{Client, options::{ClientOptions, ResolverConfig}};
-use std::env;
-use std::error::Error;
-use tokio;
+use gavlib::utils::rand_utils::random_string_of_len;
 
-// Generates a random password
+/// Generates a random password
 pub fn generate_secure()-> String {
-    let mut rng = rand::rng();
-    let password: String;
-
+    // hardcoded length for now
+    let len: usize = 12;
+    random_string_of_len(len)
 }
 
-// Stores the password
+/// Stores the password
 pub fn store_password(){
 
 }
 
-// Retrive password
+/// Retrive password
 pub fn retrieve_password(){
 
 }
