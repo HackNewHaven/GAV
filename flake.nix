@@ -24,6 +24,7 @@
           luasnip
           friendly-snippets
           chadtree
+          rust-tools-nvim
         ];
 
         pluginLuaPaths = builtins.concatStringsSep "," (map (p: "\"${p}/lua\"") plugins);
@@ -64,6 +65,7 @@ safe_require("plugins.telescope")
 safe_require("plugins.treesitter")
 safe_require("plugins.lsp")
 safe_require("plugins.cmp")
+safe_require("plugins.rust")
 EOF
 
 cat > $out/lua/core/options.lua <<EOF
@@ -108,12 +110,7 @@ if cmp_ok then
   capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
 end
 
-lspconfig.clangd.setup({
-  capabilities = capabilities,
-  cmd = { "clangd" },
-  filetypes = { "c", "cpp", "objc", "objcpp" },
-  root_dir = lspconfig.util.root_pattern("compile_commands.json", ".git"),
-})
+-- You could configure more LSPs here if needed
 EOF
 
 cat > $out/lua/plugins/cmp.lua <<EOF
@@ -145,6 +142,25 @@ cmp.setup({
   }),
 })
 EOF
+
+cat > $out/lua/plugins/rust.lua <<EOF
+local ok, rust_tools = pcall(require, "rust-tools")
+if not ok then return end
+
+rust_tools.setup({
+  server = {
+    capabilities = require("cmp_nvim_lsp").default_capabilities(),
+    on_attach = function(_, bufnr)
+      local buf_map = function(mode, lhs, rhs)
+        vim.api.nvim_buf_set_keymap(bufnr, mode, lhs, rhs, { noremap = true, silent = true })
+      end
+      buf_map("n", "K", "<cmd>RustHoverActions<CR>")
+      buf_map("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>")
+      buf_map("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>")
+    end,
+  },
+})
+EOF
           '';
         };
 
@@ -165,7 +181,11 @@ EOF
         devShells.default = pkgs.mkShell {
           buildInputs = [
             neovim-with-config
-            pkgs.clang-tools
+            pkgs.rust-analyzer
+            pkgs.rustc
+            pkgs.cargo
+            pkgs.rustfmt
+            pkgs.clippy
           ];
         };
       });

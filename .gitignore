@@ -4,6 +4,7 @@
 # make an exception for src/**/* (the contents of src and all its subdirectories)
 !/src**/*
 
+!Cargo.toml
 !.gitignore
 
 !README.md
