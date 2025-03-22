@@ -1,5 +1,4 @@
-use gavlib::test;
-use crate::functionality;
+mod functionality;
 
 fn main(){
 
