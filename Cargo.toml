@@ -14,3 +14,7 @@ path = "src/lib.rs"
 [[bin]]
 name = "gavbin"
 path = "src/bin.rs"
+
+[[bin]]
+name = "gavpwmanager"
+path = "src/pwmanager/bin.rs"
