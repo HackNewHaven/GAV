@@ -5,6 +5,7 @@ edition = "2024"
 
 [dependencies]
 egui = "0.31.1"
+mongodb = "3.2.3"
 
 [lib]
 name = "gavlib"
