@@ -10,11 +10,11 @@ log = "0.4.26"
 
 [lib]
 name = "gavlib"
-path = "src/lib.rs"
+path = "src/lib/lib.rs"
 
 [[bin]]
 name = "gavbin"
-path = "src/bin.rs"
+path = "src/bin/bin.rs"
 
 [[bin]]
 name = "gavpwmanager"
