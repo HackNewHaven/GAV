@@ -1,9 +1,9 @@
 use rand::prelude::*;
 
 // Generates a random password
-pub fn generate_secure()-> String{
+pub fn generate_secure()-> String {
     let mut rng = rand::rng();
-    let password: String 
+    let password: String;
 
 }
 
