@@ -1,0 +1,9 @@
+# ignore everything
+*
+
+# make an exception for src/**/* (the contents of src and all its subdirectories)
+!/src**/*
+
+!.gitignore
+
+!README.md
