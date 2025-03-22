@@ -12,21 +12,18 @@
         pkgs = import nixpkgs { inherit system; };
 
         plugins = with pkgs.vimPlugins; [
-          telescope-nvim
-          plenary-nvim
-          gruvbox
-          nvim-treesitter
+          rust-tools-nvim
+          nvim-lspconfig
           nvim-cmp
           cmp-nvim-lsp
           cmp-buffer
           cmp-path
           cmp_luasnip
+          #cmp-crates
+          crates-nvim
           luasnip
           friendly-snippets
           chadtree
-          rust-tools-nvim
-          cmp-crates
-          crates-nvim
         ];
 
         pluginLuaPaths = builtins.concatStringsSep "," (map (p: "\"${p}/lua\"") plugins);
@@ -63,11 +60,22 @@ local function safe_require(name)
 end
 
 safe_require("core.options")
-safe_require("plugins.telescope")
-safe_require("plugins.treesitter")
 safe_require("plugins.lsp")
 safe_require("plugins.cmp")
 safe_require("plugins.rust")
+safe_require("plugins.crates")
+safe_require("plugins.chadtree")
+EOF
+
+cat > $out/lua/plugins/chadtree.lua <<EOF
+local ok, chadtree = pcall(require, "chadtree")
+if not ok then
+  vim.notify("CHADTree not found", vim.log.levels.WARN)
+  return
+end
+
+-- Keybind to toggle the tree
+vim.keymap.set("n", "<leader>e", "<cmd>CHADopen<CR>", { desc = "Toggle CHADTree" })
 EOF
 
 cat > $out/lua/core/options.lua <<EOF
@@ -79,27 +87,6 @@ vim.opt.shiftwidth = 2
 vim.opt.tabstop = 2
 vim.cmd("filetype plugin indent on")
 vim.cmd("syntax enable")
-vim.cmd("colorscheme gruvbox")
-EOF
-
-cat > $out/lua/plugins/telescope.lua <<EOF
-local ok, telescope = pcall(require, "telescope")
-if not ok then return end
-telescope.setup({})
-vim.keymap.set("n", "<leader>ff", "<cmd>Telescope find_files<cr>")
-EOF
-
-cat > $out/lua/plugins/treesitter.lua <<EOF
-local ok, ts = pcall(require, "nvim-treesitter.configs")
-if not ok then return end
-
-ts.setup {
-  highlight = { enable = true },
-  indent = { enable = true },
-  auto_install = false,
-  sync_install = false,
-  ensure_installed = {},
-}
 EOF
 
 cat > $out/lua/plugins/lsp.lua <<EOF
@@ -111,8 +98,6 @@ local cmp_ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
 if cmp_ok then
   capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
 end
-
--- You could configure more LSPs here if needed
 EOF
 
 cat > $out/lua/plugins/cmp.lua <<EOF
@@ -163,6 +148,27 @@ rust_tools.setup({
   },
 })
 EOF
+
+cat > $out/lua/plugins/crates.lua <<EOF
+local ok, crates = pcall(require, "crates")
+if not ok then return end
+
+crates.setup()
+
+require("cmp").setup.buffer {
+  sources = {
+    { name = "crates" },
+    { name = "nvim_lsp" },
+    { name = "path" },
+    { name = "luasnip" },
+    { name = "buffer" },
+  },
+}
+
+vim.keymap.set("n", "<leader>cu", function()
+  crates.upgrade_all_crates()
+end, { desc = "Upgrade all crates" })
+EOF
           '';
         };
 
@@ -192,3 +198,4 @@ EOF
         };
       });
 }
+
