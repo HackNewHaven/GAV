@@ -194,7 +194,7 @@ EOF
             pkgs.cargo
             pkgs.rustfmt
             pkgs.clippy
-            pkgs.mongodb-ce
+            #pkgs.mongodb-ce
           ];
         };
       });
