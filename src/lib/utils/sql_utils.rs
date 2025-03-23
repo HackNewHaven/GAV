@@ -1,5 +1,5 @@
 use sqlx::mysql::MySqlPoolOptions;
-use sqlx::{MySql, MySqlConnection, QueryBuilder};
+use sqlx::{MySql, MySqlConnection, QueryBuilder, Connection};
 // etc.
 struct SecureNote {
     title: String,
@@ -16,16 +16,20 @@ struct MyMySql<'a> {
 }
 
 impl MyMySql<'_> {
-    pub fn new() -> Self {
-        MySqlConnection
-        Self {
+    pub async fn new() -> anyhow::Result<Self> {
+        Ok(Self {
             query_builder: QueryBuilder::new(
                 // Note the trailing space; most calls to `QueryBuilder` don't automatically insert
                 // spaces as that might interfere with identifiers or quoted strings where exact
                 // values may matter.
-                "SELECT title FROM SecureNote WHERE NoteId = $1",
+                "SELECT title FROM SecureNote WHERE NoteId = ?1",
             ),
-        }
+            connection: {
+                let connection = MySqlConnection::connect("sqlite::memory:").await?;
+
+                connection
+            },
+        })
     }
 }
 
