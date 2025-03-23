@@ -13,7 +13,7 @@ impl GavDaemon {
     pub async fn new(port: u16) -> anyhow::Result<Self> {
         let mut sql_connection = new_sql_connection().await?;
         sqlx::query(
-            "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, name TEXT, age INTEGER)",
+            "CREATE TABLE IF NOT EXISTS NOTES (note_id INTEGER PRIMARY KEY, title TEXT, content TEXT)",
         )
         .execute(&mut sql_connection)
         .await?;
@@ -21,7 +21,7 @@ impl GavDaemon {
         let listener = TcpListener::bind(format!("0.0.0.0:{}", port))?;
         info!("Listening on port {}", port);
 
-        println!("SQLite database launched and 'users' table is ready!");
+        println!("SQLite database launched and 'NOTES' table is ready!");
         Ok(Self {
             sql_connection,
             listener,
