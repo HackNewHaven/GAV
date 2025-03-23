@@ -1,6 +1,6 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")] // hide console window on Windows in release
 
-use gavlib::ui::app::TemplateApp;
+use gavlib::ui::app::GenericApp;
 
 fn main() -> eframe::Result {
     env_logger::init(); // Log to stderr (if you run with `RUST_LOG=debug`).
@@ -19,7 +19,7 @@ fn main() -> eframe::Result {
     eframe::run_native(
         "gav template",
         native_options,
-        Box::new(|cc| Ok(Box::new(TemplateApp::new(cc)))),
+        Box::new(|cc| Ok(Box::new(GenericApp::new(cc)))),
     )
 }
 
