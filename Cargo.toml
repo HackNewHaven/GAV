@@ -29,5 +29,5 @@ name = "gavbin"
 path = "src/bin/bin.rs"
 
 [[bin]]
-name = "gavpwmanager"
+name = "gavpwmgr"
 path = "src/pwmanager/bin.rs"
