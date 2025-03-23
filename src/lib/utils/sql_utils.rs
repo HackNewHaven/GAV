@@ -21,7 +21,7 @@ impl<'a> MyMySql<'a> {
     // Note the trailing space; most calls to `QueryBuilder` don't automatically insert
     // spaces as that might interfere with identifiers or quoted strings where exact
     // values may matter.
-    "SELECT * FROM users WHERE (id, username, email, password) in"
+    "SELECT  username, password, website FROM UserInfo"
 ),
         }
     }
