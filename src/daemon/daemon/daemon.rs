@@ -13,13 +13,18 @@ impl GavDaemon {
     pub async fn new(port: u16) -> anyhow::Result<Self> {
         let mut sql_connection = new_sql_connection().await?;
         sqlx::query(
-            "CREATE TABLE IF NOT EXISTS NOTES (note_id INTEGER PRIMARY KEY, title TEXT, content TEXT)",
+            "CREATE TABLE IF NOT EXISTS NOTES (
+                note_id INTEGER PRIMARY KEY AUTOINCREMENT, 
+                title TEXT NOT NULL, 
+                content TEXT NOT NULL
+            )",
         )
         .execute(&mut sql_connection)
         .await?;
 
         sqlx::query(
-            "INSERT INTO NOTES (title, content) VALUES ('Sample Note', 'This is a sample note content.')",
+            "INSERT INTO NOTES (title, content) 
+             VALUES ('Sample Note', 'This is a sample note content.')",
         )
         .execute(&mut sql_connection)
         .await?;
@@ -46,17 +51,15 @@ impl GavDaemon {
     async fn handle_client(&mut self, mut stream: TcpStream) -> anyhow::Result<()> {
         let peer = stream
             .peer_addr()
-            // todo do not have this default "unknown" value
             .unwrap_or_else(|_| "unknown".parse().unwrap());
 
         let mut buffer = [0; 512];
         match stream.read(&mut buffer) {
             Ok(n) => {
                 let rec_string = String::from_utf8_lossy(&buffer[..n]);
-                info!("Received from {}: {}", peer, rec_string,);
-                //let _ = stream.write_all(b"Hello from Rust daemon\n");
+                info!("Received from {}: {}", peer, rec_string);
                 info!(
-                    "inputs found while searching {}: {:?}",
+                    "Inputs found while searching {}: {:?}",
                     &rec_string,
                     self.search(rec_string.to_string()).await?
                 );
@@ -71,16 +74,16 @@ impl GavDaemon {
     pub async fn search(&mut self, input: String) -> anyhow::Result<Vec<SecureNote>> {
         let rows = query(
             r#"
-            SELECT * FROM NOTES
-            WHERE title = ? OR note_id = ?
+            SELECT note_id, title, content 
+            FROM NOTES
+            WHERE title LIKE ? OR note_id = ?
             "#,
         )
-        .bind(&input)
-        .bind(&input)
+        .bind(format!("%{}%", input)) // Use LIKE for partial matches
+        .bind(input.parse::<i32>().ok()) // Bind note_id if input is numeric
         .fetch_all(&mut self.sql_connection)
         .await?;
 
-        // Map rows to SecureNote, depending on its structure
         let results = rows
             .into_iter()
             .map(|row| SecureNote::new(row.get("title"), row.get("content"), row.get("note_id")))
