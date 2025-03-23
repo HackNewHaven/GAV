@@ -9,7 +9,7 @@ pub struct SqlConnection {
     conn: PooledConn,
 }
 
-struct UserDb {
+pub struct UserDb {
     username: String,
     password: String,
     website: String
