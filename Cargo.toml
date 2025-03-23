@@ -18,7 +18,7 @@ log = "0.4.26"
 rand = { version = "0.9.0", features = ["std_rng", "log"] }
 serde = "1.0.219"
 windows-registry = "0.5.1"
-clap = "4.5.32"
+clap = { version = "4.5.32", features = [ "derive" ] }
 
 [lib]
 name = "gavlib"
@@ -29,5 +29,5 @@ name = "gavbin"
 path = "src/bin/bin.rs"
 
 [[bin]]
-name = "gavpwmanager"
+name = "gavpwmgr"
 path = "src/pwmanager/bin.rs"
