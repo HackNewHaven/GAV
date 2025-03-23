@@ -4,3 +4,33 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+#egui = "0.31.1"
+env_logger = "0.11"
+eframe = { version = "0.30", default-features = false, features = [
+    "accesskit",     # Make egui compatible with screen readers. NOTE: adds a lot of dependencies.
+    "default_fonts", # Embed the default egui fonts.
+    "glow",          # Use the glow rendering backend. Alternative: "wgpu".
+    "persistence",   # Enable restoring app state when restarting the app.
+    "wayland",       # To support Linux (and CI)
+] }
+#mysql = "26.0.0"
+sqlx = { version = "0.8.3", features = [ "sqlite", "runtime-tokio", "tls-native-tls" ] }
+log = "0.4.26"
+rand = { version = "0.9.0", features = ["std_rng", "log"] }
+serde = "1.0.219"
+windows-registry = "0.5.1"
+clap = { version = "4.5.32", features = [ "derive" ] }
+anyhow = "1.0.97"
+tokio = { version = "1.20.0", features = ["rt-multi-thread", "macros"]}
+
+[lib]
+name = "gavlib"
+path = "src/lib/lib.rs"
+
+[[bin]]
+name = "gavdaemon"
+path = "src/daemon/bin.rs"
+
+[[bin]]
+name = "gavfrontend"
+path = "src/frontend/bin.rs"

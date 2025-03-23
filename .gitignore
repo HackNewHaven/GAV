@@ -3,8 +3,12 @@
 
 # make an exception for src/**/* (the contents of src and all its subdirectories)
 !/src**/*
+!/assets**/*
 
 !Cargo.toml
+!rustfmt.toml
 !.gitignore
+!SecureNote.db
+!test.db
 
 !README.md
