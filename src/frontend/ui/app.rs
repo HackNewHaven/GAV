@@ -4,15 +4,16 @@ pub struct FrontendApp {
     // Example stuff:
     label: String,
 
-    value: f32,
+    //value: f32,
 }
 
 impl Default for FrontendApp {
     fn default() -> Self {
         Self {
             // Example stuff:
-            label: "Hello World!".to_owned(),
-            value: 2.7,
+           // label: "Hello World!".to_owned(),
+            //value: 2.7,
+            label: String::new(),
         }
     }
 }
@@ -55,13 +56,12 @@ impl eframe::App for FrontendApp {
 
             ui.horizontal(|ui| {
                 ui.label("Enter the title of the note: ");
-                ui.text_edit_singleline(&mut self.label);
+                ui.add(
+                    egui::TextEdit::singleline(&mut self.label)
+                        .hint_text("Enter your note title here..."),
+                );
             });
 
-            ui.add(egui::Slider::new(&mut self.value, 0.0..=10.0).text("value"));
-            if ui.button("Increment").clicked() {
-                self.value += 1.0;
-            }
 
             ui.separator();
 
