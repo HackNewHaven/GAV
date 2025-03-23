@@ -1,7 +1,6 @@
 use std::io::{Read, Write};
 use std::net::{TcpListener, TcpStream};
 use log::{info, error};
-use env_logger;
 use gavlib::utils::sql_utils;
 
 fn handle_client(mut stream: TcpStream) {

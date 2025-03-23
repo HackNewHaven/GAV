@@ -1,5 +1,5 @@
 use sqlx::mysql::MySqlPoolOptions;
-use sqlx::{Execute, MySql, QueryBuilder};
+use sqlx::{MySql, QueryBuilder};
 // etc.
 struct UserInfo{
     username : String,
@@ -14,7 +14,7 @@ struct MyMySql<'a> {
 
 
 
-impl<'a> MyMySql<'a> {
+impl MyMySql<'_> {
     pub fn new() -> Self {
         Self {
             query_builder: QueryBuilder::new(
