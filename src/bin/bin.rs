@@ -17,10 +17,10 @@ fn handle_client(mut stream: TcpStream) {
                 String::from_utf8_lossy(&buffer[..n])
             );
             let _ = stream.write_all(b"Hello from Rust daemon\n");
-        }
+        },
         Err(e) => {
             error!("Failed to read from {}: {}", peer, e);
-        }
+        },
     }
 }
 

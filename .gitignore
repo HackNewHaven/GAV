@@ -6,7 +6,7 @@
 !/assets**/*
 
 !Cargo.toml
-!clippy.toml
+!rustfmt.toml
 !.gitignore
 
 !README.md
