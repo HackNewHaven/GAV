@@ -51,10 +51,10 @@ impl eframe::App for FrontendApp {
 
         egui::CentralPanel::default().show(ctx, |ui| {
             // The central panel the region left after adding TopPanel's and SidePanel's
-            ui.heading("eframe template");
+            ui.heading("GAV User Interface");
 
             ui.horizontal(|ui| {
-                ui.label("Write something: ");
+                ui.label("Enter the title of the note: ");
                 ui.text_edit_singleline(&mut self.label);
             });
 
