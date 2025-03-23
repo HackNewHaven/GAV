@@ -27,15 +27,15 @@ let tamperProtection = LOCAL_MACHINE
     .get_u32("DisableTamperProtection")
     .expect("Failed to get registry value");
 
+//check if cloud protection is enabled
+//if not enabled notify user and prompt to enable
 
-    //check if real time monitoring is enabled
-    //if not enabled notify user and prompt to enable
+    let cloudrotection_SubmitSamplesConsent = LOCAL_MACHINE
+    .open(r#"SOFTWARE\Microsoft\Windows Defender\Spynet"#)
+    .expect("Failed to get registry key")
+    .get_u32("SubmitSamplesConsent")
+    .expect("Failed to get registry value");
 
-    //check if cloud protection is enabled
-    //if not enabled notify user and prompt to enable
-
-    //check if automatic sample submission is enabled
-    //if not enabled notify user and prompt to enable
 
     //check if exploit protection is enabled
     //if not enabled notify user and prompt to enable
