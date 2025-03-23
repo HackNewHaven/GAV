@@ -67,11 +67,13 @@ impl eframe::App for FrontendApp {
             ui.heading("GAV User Interface");
             ui.label("Check windows security settings");
             if ui.button("Check").clicked() {
+                //call function for checking windows security settings
                 println!("Button clicked!");
             }
             
             ui.label("Enable Windows Defender");
             if ui.button("Enable").clicked() {
+                //call function for enabling windows defender
                 println!("Button clicked!");
             }
             /*
