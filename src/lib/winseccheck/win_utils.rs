@@ -67,3 +67,17 @@ pub fn check_windows_defender() -> bool {
 //if disabled notify user and prompt to enable
 
 // ok(())
+pub fn EnableSecSettings (){
+    // Open registry for Windows Defender
+    let key = LOCAL_MACHINE.open(r#"SOFTWARE\Microsoft\Windows Defender"#).expect("Failed to get registry key");
+
+    // Set DisableAntiSpyware to 0 (enabled)
+    key.set_u32("DisableAntiSpyware", 0).expect("Failed to set registry value");
+    key.set_u32("DisableAntiVirus", 0).expect("Failed to set registry value");
+    key.set_u32("SubmitSamplesConsent", 1).expect("Failed to set registry value");
+
+    let key: Key = LOCAL_MACHINE.open(r#"SOFTWARE\Microsoft\Windows Defender\Features"#).expect("Failed to get registry key");
+    key.set_u32("DisableTamperProtection", 0).expect("Failed to set registry value");
+
+    println!("Windows Defender settings have been enabled.");
+}
