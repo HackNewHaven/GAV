@@ -1,6 +1,6 @@
 use sqlx::{Connection, MySqlConnection};
 
-struct SecureNote {
+pub struct SecureNote {
     title: String,
     content: String,
     password: String,
