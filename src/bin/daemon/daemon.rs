@@ -1,4 +1,4 @@
-use gavlib::utils::sql_utils::new_sql_connection;
+use gavlib::utils::sql_utils::{new_sql_connection, SecureNote};
 use sqlx::{Connection, MySqlConnection};
 
 pub struct GavDaemon {
