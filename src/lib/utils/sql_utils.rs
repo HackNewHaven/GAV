@@ -3,8 +3,17 @@ use sqlx::{Connection, MySqlConnection};
 pub struct SecureNote {
     title: String,
     content: String,
-    password: String,
     note_id: i32,
+}
+
+impl SecureNote {
+    pub fn new(title: String, content: String, note_id: i32) -> Self {
+        Self {
+            title,
+            content,
+            note_id,
+        }
+    }
 }
 
 pub async fn new_sql_connection() -> anyhow::Result<MySqlConnection> {

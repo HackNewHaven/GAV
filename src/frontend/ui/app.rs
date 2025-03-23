@@ -54,7 +54,7 @@ impl eframe::App for FrontendApp {
             ui.heading("eframe template");
 
             ui.horizontal(|ui| {
-                ui.label("Write something: ");
+                ui.label("Search notes: ");
                 ui.text_edit_singleline(&mut self.label);
             });
 

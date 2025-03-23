@@ -30,7 +30,6 @@ fn handle_client(mut stream: TcpStream) {
 async fn main() -> anyhow::Result<()> {
     env_logger::init();
 
-
     let listener = TcpListener::bind("0.0.0.0:7878")?;
     info!("Listening on port 7878");
 
