@@ -1,13 +1,13 @@
 use eframe::egui;
 
-pub struct PwApp {
+pub struct FrontendApp {
     // Example stuff:
     label: String,
 
     value: f32,
 }
 
-impl Default for PwApp {
+impl Default for FrontendApp {
     fn default() -> Self {
         Self {
             // Example stuff:
@@ -17,7 +17,7 @@ impl Default for PwApp {
     }
 }
 
-impl PwApp {
+impl FrontendApp {
     /// Called once before the first frame.
     pub fn new(cc: &eframe::CreationContext<'_>) -> Self {
         // This is also where you can customize the look and feel of egui using
@@ -27,7 +27,7 @@ impl PwApp {
     }
 }
 
-impl eframe::App for PwApp {
+impl eframe::App for FrontendApp {
     /// Called each time the UI needs repainting, which may be many times per second.
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         // Put your widgets into a `SidePanel`, `TopBottomPanel`, `CentralPanel`, `Window` or `Area`.
