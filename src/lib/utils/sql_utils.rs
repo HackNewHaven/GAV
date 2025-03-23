@@ -1,38 +1,17 @@
-use sqlx::mysql::MySqlPoolOptions;
-use sqlx::{MySql, MySqlConnection, QueryBuilder, Connection};
-// etc.
+use sqlx::{Connection, MySqlConnection};
+
 struct SecureNote {
     title: String,
     content: String,
     password: String,
-    NoteId: i32,
-}
-const BIND_LIMIT: usize = 65535;
-
-struct MyMySql<'a> {
-    query_builder: QueryBuilder<'a, MySql>,
-    connection: MySqlConnection,
-
+    note_id: i32,
 }
 
-impl MyMySql<'_> {
-    pub async fn new() -> anyhow::Result<Self> {
-        Ok(Self {
-            query_builder: QueryBuilder::new(
-                // Note the trailing space; most calls to `QueryBuilder` don't automatically insert
-                // spaces as that might interfere with identifiers or quoted strings where exact
-                // values may matter.
-                "SELECT title FROM SecureNote WHERE NoteId = ?1",
-            ),
-            connection: {
-                let connection = MySqlConnection::connect("sqlite::memory:").await?;
-
-                connection
-            },
-        })
-    }
+pub async fn new_sql_connection() -> anyhow::Result<MySqlConnection> {
+    Ok(MySqlConnection::connect("sqlite::memory:").await?)
 }
 
+/*
 //#[tokio::main]
 //pub async fn foobar() -> Result<(), sqlx::Error> {
 pub async fn foobar() -> anyhow::Result<()> {
@@ -51,3 +30,4 @@ pub async fn foobar() -> anyhow::Result<()> {
 
     Ok(())
 }
+*/

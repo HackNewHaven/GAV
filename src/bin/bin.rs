@@ -1,3 +1,5 @@
+mod daemon;
+use daemon::GavDaemon;
 use gavlib::utils::sql_utils;
 use log::{error, info};
 use std::io::{Read, Write};
@@ -28,7 +30,6 @@ fn handle_client(mut stream: TcpStream) {
 async fn main() -> anyhow::Result<()> {
     env_logger::init();
 
-    sql_utils::foobar().await?;
 
     let listener = TcpListener::bind("0.0.0.0:7878")?;
     info!("Listening on port 7878");
