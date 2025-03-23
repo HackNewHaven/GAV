@@ -14,7 +14,10 @@ We built our app using Rust, along with various libraries within Rust. These lib
 
 * Implementing different functions
 * Implementation of SQL
-* Connecting the front end of the app to the back-end code ## Accomplishments that we're proud of
+* Connecting the front end of the app to the back-end code
+
+# Accomplishments that we're proud of
+
 * Learning rust in a fast and challenging environment well
 * The amount of team work we both put in
 * The time we spent on this project
