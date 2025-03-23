@@ -65,11 +65,15 @@ impl eframe::App for FrontendApp {
         egui::CentralPanel::default().show(ctx, |ui| {
             // The central panel the region left after adding TopPanel's and SidePanel's
             ui.heading("GAV User Interface");
-            ui.label("Enable Window Defender Security Settings");
+            ui.label("Check windows security settings");
+            if ui.button("Check").clicked() {
+                println!("Button clicked!");
+            }
+            
+            ui.label("Enable Windows Defender");
             if ui.button("Enable").clicked() {
                 println!("Button clicked!");
             }
-
             /*
             ui.horizontal(|ui| {
                 ui.label("Search: ");
