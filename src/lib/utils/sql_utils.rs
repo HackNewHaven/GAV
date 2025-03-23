@@ -1,4 +1,4 @@
-//use sqlx::postgres::PgPoolOptions;
+use sqlx::mysql::MySqlPoolOptions;
 use sqlx::{Execute, MySql, QueryBuilder};
 // etc.
 struct UserInfo{
@@ -7,15 +7,27 @@ struct UserInfo{
     website: String
 }
 const BIND_LIMIT: usize = 65535;
-struct MyMySql{
 
-query_builder: QueryBuilder<MySql> = QueryBuilder::new(
+struct MyMySql<'a> {
+    query_builder: QueryBuilder<'a, MySql>,
+}
+
+
+
+impl<'a> MyMySql<'a> {
+    pub fn new() -> Self {
+        Self {
+            query_builder: QueryBuilder::new(
     // Note the trailing space; most calls to `QueryBuilder` don't automatically insert
     // spaces as that might interfere with identifiers or quoted strings where exact
     // values may matter.
     "SELECT * FROM users WHERE (id, username, email, password) in"
-);
+),
+        }
+    }
 }
+
+
 //#[tokio::main]
 //pub async fn foobar() -> Result<(), sqlx::Error> {
 pub async fn foobar() -> anyhow::Result<()> {
