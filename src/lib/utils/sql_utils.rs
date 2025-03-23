@@ -1,10 +1,11 @@
 use sqlx::mysql::MySqlPoolOptions;
 use sqlx::{MySql, QueryBuilder};
 // etc.
-struct UserInfo{
-    username : String,
+struct SecureNote {
+    title : String,
+    content: String,
     password: String,
-    website: String
+    NoteId: i32
 }
 const BIND_LIMIT: usize = 65535;
 
@@ -21,7 +22,7 @@ impl MyMySql<'_> {
     // Note the trailing space; most calls to `QueryBuilder` don't automatically insert
     // spaces as that might interfere with identifiers or quoted strings where exact
     // values may matter.
-    "SELECT  username, password, website FROM UserInfo"
+    "SELECT  * FROM SecureNote"
 ),
         }
     }
