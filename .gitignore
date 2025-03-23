@@ -8,5 +8,6 @@
 !Cargo.toml
 !rustfmt.toml
 !.gitignore
+!SecureNote.db
 
 !README.md
