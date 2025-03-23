@@ -18,6 +18,12 @@ impl GavDaemon {
         .execute(&mut sql_connection)
         .await?;
 
+        sqlx::query(
+            "INSERT INTO NOTES (title, content) VALUES ('Sample Note', 'This is a sample note content.')",
+        )
+        .execute(&mut sql_connection)
+        .await?;
+
         let listener = TcpListener::bind(format!("0.0.0.0:{}", port))?;
         info!("Listening on port {}", port);
 
