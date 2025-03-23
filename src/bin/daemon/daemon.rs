@@ -11,4 +11,8 @@ impl GavDaemon {
             sql_connection: new_sql_connection().await?,
         })
     }
+    pub fn search(&self, input:String) -> Vec<SecureNote>{
+        
+    }
+
 }
