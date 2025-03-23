@@ -7,8 +7,14 @@ pub struct GavDaemon {
 
 impl GavDaemon {
     pub async fn new() -> anyhow::Result<Self> {
+    let mut connection = new_sql_connection().await?;
+        sqlx::query("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, name TEXT, age INTEGER)")
+        .execute(&mut connection)
+        .await?;
+
+    println!("SQLite database launched and 'users' table is ready!");
         Ok(Self {
-            sql_connection: new_sql_connection().await?,
+            sql_connection: connection,
         })
     }
 

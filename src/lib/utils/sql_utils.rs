@@ -17,7 +17,7 @@ impl SecureNote {
 }
 
 pub async fn new_sql_connection() -> anyhow::Result<MySqlConnection> {
-    Ok(MySqlConnection::connect("sqlite::memory:").await?)
+    Ok(MySqlConnection::connect("sqlite://SecureNoteDB.sqlite").await?)
 }
 
 /*
