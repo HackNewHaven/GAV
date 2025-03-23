@@ -1,91 +1,68 @@
-use windows_registry::*;
+use windows_registry::{Key, LOCAL_MACHINE}; // Ensure correct imports
+use std::error::Error;
 
-//TODO: Create for windows only execution
-
-//create function to check windows defender settings
-
-//check if windows defender is enabled, and settings are correct
-//if settings not correct, create option to set the settings all together
-pub fn check_windows_defender() -> bool {
+// Ensure this function only compiles on Windows
+#[cfg(target_os = "windows")]
+pub fn check_windows_defender() -> Result<bool, Box<dyn Error>> {
     // Open registry for Windows Defender
     let DisableAntiSpy = LOCAL_MACHINE
-        .open(r#"SOFTWARE\Microsoft\Windows Defender"#)
-        .expect("Failed to get registry key")
+        .open(r#"SOFTWARE\Microsoft\Windows Defender"#)?
         .get_u32("DisableAntiSpyware")
-        .expect("Failed to get registry value");
-    //DisableAntiSpy != 0;
+        .unwrap_or(1); // Default to 1 (disabled) if value is missing
 
     let DisableAV = LOCAL_MACHINE
-        .open(r#"SOFTWARE\Microsoft\Windows Defender"#)
-        .expect("Failed to get registry key")
+        .open(r#"SOFTWARE\Microsoft\Windows Defender"#)?
         .get_u32("DisableAntiVirus")
-        .expect("Failed to get registry value");
-    //DisableAV != 0;
-    let tamperProtection = LOCAL_MACHINE
-        .open(r#"SOFTWARE\Microsoft\Windows Defender\Features"#)
-        .expect("Failed to get registry key")
-        .get_u32("DisableTamperProtection")
-        .expect("Failed to get registry value");
+        .unwrap_or(1);
 
-    //check if cloud protection is enabled
-    //if not enabled notify user and prompt to enable
+    let tamperProtection = LOCAL_MACHINE
+        .open(r#"SOFTWARE\Microsoft\Windows Defender\Features"#)?
+        .get_u32("DisableTamperProtection")
+        .unwrap_or(1);
 
     let cloudrotection_SubmitSamplesConsent = LOCAL_MACHINE
-        .open(r#"SOFTWARE\Microsoft\Windows Defender\Spynet"#)
-        .expect("Failed to get registry key")
+        .open(r#"SOFTWARE\Microsoft\Windows Defender\Spynet"#)?
         .get_u32("SubmitSamplesConsent")
-        .expect("Failed to get registry value");
+        .unwrap_or(0);
 
-    //check if exploit protection is enabled
-    //if not enabled notify user and prompt to enable
+    println!("Windows Defender is disabled: {}", DisableAntiSpy != 0);
+    println!("Anti-Virus is disabled: {}", DisableAV != 0);
+    println!("Tamper Protection is disabled: {}", tamperProtection != 0);
+    println!(
+        "Cloud Protection Submit Samples Consent: {}",
+        cloudrotection_SubmitSamplesConsent
+    );
 
-    //check if controlled folder access is enabled
-    //if not enabled notify user and prompt to enable
-
-    //check if firewall is enabled
-    //if not enabled notify user and prompt to enable
-
-    //check if network protection is enabled
-    //if not enabled notify user and prompt to enable
-
-    //check if ransomware protection is enabled
-    //if not enabled notify user and prompt to enable
-
-    println!("Windows Defender is disabled: {}", DisableAntiSpy);
-    println!("Anti-Virus is disabled {}", DisableAV);
-    println!("Tamper Protection is disabled {}", tamperProtection);
-    //if any of the above are disabled return false, else return true
-
-    true //ok(())
+    // Return false if any critical settings are disabled
+    Ok(DisableAntiSpy == 0 && DisableAV == 0 && tamperProtection == 0)
 }
 
-//check if DisableAntiSpyware is set to 0 (enabled)
-//let defender_enabled = key.get_u32("DisableAntiSpyware")?;
-//check if DisableRealtimeMonitoring is ebabledc
-//let realtime_enabled = key.get_value("DisableRealtimeMonitoring").unwrap_or(Value::Dword(0)) != Value::(0);
-
-//if disabled notify user and prompt to enable
-
-// ok(())
-pub fn EnableSecSettings() {
+#[cfg(target_os = "windows")]
+pub fn enable_sec_settings() -> Result<(), Box<dyn Error>> {
     // Open registry for Windows Defender
-    let key = LOCAL_MACHINE
-        .open(r#"SOFTWARE\Microsoft\Windows Defender"#)
-        .expect("Failed to get registry key");
+    let key = LOCAL_MACHINE.open(r#"SOFTWARE\Microsoft\Windows Defender"#)?;
 
-    // Set DisableAntiSpyware to 0 (enabled)
-    key.set_u32("DisableAntiSpyware", 0)
-        .expect("Failed to set registry value");
-    key.set_u32("DisableAntiVirus", 0)
-        .expect("Failed to set registry value");
-    key.set_u32("SubmitSamplesConsent", 1)
-        .expect("Failed to set registry value");
+    // Set critical settings to enabled
+    key.set_u32("DisableAntiSpyware", 0)?;
+    key.set_u32("DisableAntiVirus", 0)?;
+    key.set_u32("SubmitSamplesConsent", 1)?;
 
-    let key: Key = LOCAL_MACHINE
-        .open(r#"SOFTWARE\Microsoft\Windows Defender\Features"#)
-        .expect("Failed to get registry key");
-    key.set_u32("DisableTamperProtection", 0)
-        .expect("Failed to set registry value");
+    let key = LOCAL_MACHINE.open(r#"SOFTWARE\Microsoft\Windows Defender\Features"#)?;
+    key.set_u32("DisableTamperProtection", 0)?;
 
     println!("Windows Defender settings have been enabled.");
+    Ok(())
+}
+
+// Add a fallback for non-Windows platforms
+#[cfg(not(target_os = "windows"))]
+pub fn check_windows_defender() -> Result<bool, Box<dyn Error>> {
+    println!("This function is only supported on Windows.");
+    Ok(false)
+}
+
+#[cfg(not(target_os = "windows"))]
+pub fn enable_sec_settings() -> Result<(), Box<dyn Error>> {
+    println!("This function is only supported on Windows.");
+    Ok(())
 }
