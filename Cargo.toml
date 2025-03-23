@@ -13,12 +13,15 @@ eframe = { version = "0.30", default-features = false, features = [
     "persistence",   # Enable restoring app state when restarting the app.
     "wayland",       # To support Linux (and CI)
 ] }
-mysql = "26.0.0"
+#mysql = "26.0.0"
+sqlx = { version = "0.8.3", features = [ "mysql", "runtime-tokio", "tls-native-tls" ] }
 log = "0.4.26"
 rand = { version = "0.9.0", features = ["std_rng", "log"] }
 serde = "1.0.219"
 windows-registry = "0.5.1"
 clap = { version = "4.5.32", features = [ "derive" ] }
+anyhow = "1.0.97"
+tokio = { version = "1.20.0", features = ["rt", "macros"]}
 
 [lib]
 name = "gavlib"

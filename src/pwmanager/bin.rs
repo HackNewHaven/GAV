@@ -3,6 +3,9 @@
 mod ui;
 use crate::ui::PwApp;
 
+use gavlib::utils::sql_utils::{SqlConnection, DbResult};
+
+/*
 fn main() -> eframe::Result {
     env_logger::init(); // Log to stderr (if you run with `RUST_LOG=debug`).
 
@@ -23,4 +26,9 @@ fn main() -> eframe::Result {
         Box::new(|cc| Ok(Box::new(PwApp::new(cc)))),
     )
 }
+*/
 
+fn main() -> DbResult<()> {
+    SqlConnection::new("mysql://root:password@localhost:3307/user_db")?;
+    Ok(())
+}

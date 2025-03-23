@@ -194,6 +194,9 @@ EOF
             pkgs.rustfmt
             pkgs.clippy
             pkgs.mysql84
+            pkgs.pkg-config
+            pkgs.openssl
+            pkgs.sqlx-cli
           ];
 
           LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath (with pkgs; [

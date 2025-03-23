@@ -1,58 +1,99 @@
-use mysql::{
-    PooledConn, Pool, params,
-    prelude::{Queryable},
-};
+use clap::{Parser, Subcommand};
+use sqlx::mysql::MySqlPool;
 
-type DbResult<T> = std::result::Result<T, Box<dyn std::error::Error>>;
-
-pub struct SqlConnection {
-    conn: PooledConn,
+#[derive(Parser)]
+struct Args {
+    #[command(subcommand)]
+    cmd: Option<Command>,
 }
 
-pub struct UserDb {
-    username: String,
-    password: String,
-    website: String
+#[derive(Subcommand)]
+enum Command {
+    Add { description: String },
+    Done { id: u64 },
 }
 
-impl SqlConnection {
-    pub fn new(url: &str) -> DbResult<Self> {
-        Ok(Self {
-            conn: Pool::new(url)?.get_conn()?
-        })
+#[tokio::main(flavor = "current_thread")]
+async fn main() -> anyhow::Result<()> {
+    let args = Args::parse();
+    let pool = MySqlPool::connect("mysql://root:password@localhost/user_db").await?;
+
+    match args.cmd {
+        Some(Command::Add { description }) => {
+            println!("Adding new todo with description '{description}'");
+            let todo_id = add_todo(&pool, description).await?;
+            println!("Added new todo with id {todo_id}");
+        }
+        Some(Command::Done { id }) => {
+            println!("Marking todo {id} as done");
+            if complete_todo(&pool, id).await? {
+                println!("Todo {id} is marked as done");
+            } else {
+                println!("Invalid id {id}");
+            }
+        }
+        None => {
+            println!("Printing list of all todos");
+            list_todos(&pool).await?;
+        }
     }
 
-// Stores the password
-pub fn store_password(&mut self) -> DbResult<()> {
-    //Sample insert w/o implementation on UI as we will do that later.
-    
-    let added_accounts = vec! [
-        UserDb{username: "test1".to_string(), password: "test1".to_string(), website: "test1.com".to_string()}
-    ];
-
-    Ok(self.conn.exec_batch(
-        r"INSERT INTO user_db (username, password, website)
-          VALUES (:username, :password, :website)",
-          added_accounts.iter().map(|p| params! {
-            "username" => &p.username,
-            "password" => &p.password,
-            "website" => &p.website,
-        })
-    )?)
+    Ok(())
 }
 
-    // Retrive password
-    pub fn retrieve_userdb_vec(&mut self) -> DbResult<Vec<UserDb>> {
-        //Sample select w/o implementation on UI as we will do that later.
-        Ok(self.conn.query_map(
-            "SELECT username, password, website FROM user_db",
-            |(username, password, website)| {
-                UserDb {
-                    username,
-                    password,
-                    website
-                }
-            },
-        )?)
+async fn add_todo(pool: &MySqlPool, description: String) -> anyhow::Result<u64> {
+    // Insert the task, then obtain the ID of this row
+    let todo_id = sqlx::query!(
+        r#"
+INSERT INTO todos ( description )
+VALUES ( ? )
+        "#,
+        description
+    )
+    .execute(pool)
+    .await?
+    .last_insert_id();
+
+    Ok(todo_id)
+}
+
+async fn complete_todo(pool: &MySqlPool, id: u64) -> anyhow::Result<bool> {
+    let rows_affected = sqlx::query!(
+        r#"
+UPDATE todos
+SET done = TRUE
+WHERE id = ?
+        "#,
+        id
+    )
+    .execute(pool)
+    .await?
+    .rows_affected();
+
+    Ok(rows_affected > 0)
+}
+
+async fn list_todos(pool: &MySqlPool) -> anyhow::Result<()> {
+    let recs = sqlx::query!(
+        r#"
+SELECT id, description, done
+FROM todos
+ORDER BY id
+        "#
+    )
+    .fetch_all(pool)
+    .await?;
+
+    // NOTE: Booleans in MySQL are stored as `TINYINT(1)` / `i8`
+    //       0 = false, non-0 = true
+    for rec in recs {
+        println!(
+            "- [{}] {}: {}",
+            if rec.done != 0 { "x" } else { " " },
+            rec.id,
+            &rec.description,
+        );
     }
+
+    Ok(())
 }
