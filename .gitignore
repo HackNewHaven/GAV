@@ -9,5 +9,6 @@
 !rustfmt.toml
 !.gitignore
 !SecureNote.db
+!test.db
 
 !README.md

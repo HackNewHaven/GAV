@@ -18,7 +18,7 @@ impl SecureNote {
 }
 
 pub async fn new_sql_connection() -> anyhow::Result<SqliteConnection> {
-    Ok(SqliteConnection::connect("sqlite:SecureNote.db").await?)
+    Ok(SqliteConnection::connect("sqlite:test.db").await?)
 }
 
 /*
