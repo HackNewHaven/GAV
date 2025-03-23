@@ -1,6 +1,6 @@
 use gavlib::utils::sql_utils::{SecureNote, new_sql_connection};
 use log::{error, info};
-use sqlx::{SqliteConnection, Row, query};
+use sqlx::{Row, SqliteConnection, query};
 use std::io::Read;
 use std::net::{TcpListener, TcpStream};
 
