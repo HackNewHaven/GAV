@@ -1,5 +1,6 @@
-use sqlx::{Connection, MySqlConnection};
+use sqlx::{Connection, SqliteConnection};
 
+#[derive(Debug)]
 pub struct SecureNote {
     title: String,
     content: String,
@@ -16,8 +17,8 @@ impl SecureNote {
     }
 }
 
-pub async fn new_sql_connection() -> anyhow::Result<MySqlConnection> {
-    Ok(MySqlConnection::connect("sqlite://SecureNoteDB.sqlite").await?)
+pub async fn new_sql_connection() -> anyhow::Result<SqliteConnection> {
+    Ok(SqliteConnection::connect("sqlite:SecureNote.db").await?)
 }
 
 /*
