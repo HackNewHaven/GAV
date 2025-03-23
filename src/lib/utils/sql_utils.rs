@@ -20,7 +20,7 @@ impl MyMySql<'_> {
                 // Note the trailing space; most calls to `QueryBuilder` don't automatically insert
                 // spaces as that might interfere with identifiers or quoted strings where exact
                 // values may matter.
-                "SELECT  * FROM SecureNote",
+                "SELECT title FROM SecureNote WHERE NoteId = $1",
             ),
         }
     }
