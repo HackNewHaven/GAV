@@ -2,6 +2,7 @@ use std::io::{Read, Write};
 use std::net::{TcpListener, TcpStream};
 use log::{info, error};
 use env_logger;
+use gavlib::utils::sql_utils;
 
 fn handle_client(mut stream: TcpStream) {
     let peer = stream.peer_addr().unwrap_or_else(|_| "unknown".parse().unwrap());
@@ -18,8 +19,11 @@ fn handle_client(mut stream: TcpStream) {
     }
 }
 
-fn main() -> std::io::Result<()> {
+#[tokio::main]
+async fn main() -> anyhow::Result<()> {
     env_logger::init();
+
+    sql_utils::foobar().await?;
 
     let listener = TcpListener::bind("0.0.0.0:7878")?;
     info!("Listening on port 7878");

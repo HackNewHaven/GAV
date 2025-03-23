@@ -3,7 +3,6 @@
 mod ui;
 use crate::ui::PwApp;
 
-use gavlib::utils::sql_utils::{SqlConnection, DbResult};
 
 /*
 fn main() -> eframe::Result {
@@ -28,7 +27,6 @@ fn main() -> eframe::Result {
 }
 */
 
-fn main() -> DbResult<()> {
-    SqlConnection::new("mysql://root:password@localhost:3307/user_db")?;
-    Ok(())
+fn main() {
+    
 }
