@@ -41,7 +41,7 @@ impl FrontendApp {
         // `cc.egui_ctx.set_visuals` and `cc.egui_ctx.set_fonts`.
 
         let mut ret: FrontendApp = Default::default();
-        ret.tcp_stream = Some(TcpStream::connect("0.0.0.0:7878").expect("Daemon not running"));
+       // ret.tcp_stream = Some(TcpStream::connect("0.0.0.0:7878").expect("Daemon not running"));
         ret
     }
 }
@@ -65,6 +65,10 @@ impl eframe::App for FrontendApp {
         egui::CentralPanel::default().show(ctx, |ui| {
             // The central panel the region left after adding TopPanel's and SidePanel's
             ui.heading("GAV User Interface");
+            ui.label("Enable Window Defender Security Settings");
+            if ui.button("Enable").clicked() {
+                println!("Button clicked!");
+            }
 
             /*
             ui.horizontal(|ui| {
