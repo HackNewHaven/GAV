@@ -11,8 +11,13 @@ impl GavDaemon {
             sql_connection: new_sql_connection().await?,
         })
     }
-    pub fn search(&self, input:String) -> Vec<SecureNote>{
-        
-    }
+    pub async fn search(&mut self, input:String) -> Vec<SecureNote>{
+        sqlx::query_as ("SELECT * FROM NOTES WHERE title = ?1 OR note_id = ?1")
+            .bind(input)
+            .fetch_all(&mut self.sql_connection)
+            .await
+            .into_iter()
+            .collect::<>()
+        }
 
 }
