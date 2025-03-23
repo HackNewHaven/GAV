@@ -18,7 +18,10 @@ We built our app using Rust, along with various libraries within Rust. These lib
 * Learning rust in a fast and challenging environment well
 * The amount of team work we both put in
 * The time we spent on this project
-* How much fun we had while working on this competition ## What we learned
+* How much fun we had while working on this competition
+
+# What we learned
+
 * How to program in Rust
 * Git and GitHub
 
