@@ -1,5 +1,5 @@
 use sqlx::mysql::MySqlPoolOptions;
-use sqlx::{MySql, QueryBuilder};
+use sqlx::{MySql, MySqlConnection, QueryBuilder};
 // etc.
 struct SecureNote {
     title: String,
@@ -11,10 +11,13 @@ const BIND_LIMIT: usize = 65535;
 
 struct MyMySql<'a> {
     query_builder: QueryBuilder<'a, MySql>,
+    connection: MySqlConnection,
+
 }
 
 impl MyMySql<'_> {
     pub fn new() -> Self {
+        MySqlConnection
         Self {
             query_builder: QueryBuilder::new(
                 // Note the trailing space; most calls to `QueryBuilder` don't automatically insert
